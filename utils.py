@@ -23,13 +23,13 @@ def isWindow():
     return name == 'Windows'
 
 
-def exists(file):
-    return os.path.exists(file)
+def exists(s_file):
+    return os.path.exists(s_file)
 
 
-def mkdirs(file):
-    if not exists(file):
-        os.makedirs(file)
+def mkdirs(s_file):
+    if not exists(s_file):
+        os.makedirs(s_file)
 
 
 def execute(command):
@@ -40,8 +40,8 @@ def execute(command):
     return p.wait()
 
 
-def unTar(file, dir):
-    execute("tar -zxvf " + file + " -C " + dir)
+def unTar(s_file, s_dir):
+    execute("tar -zxvf " + s_file + " -C " + s_dir)
 
 
 def cd(dir):
