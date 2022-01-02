@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: UTF-8 -*-
 import os.path
 import platform
 import subprocess
@@ -68,12 +69,16 @@ def getValue(config, selection, name, value):
         import configparser
         try:
             return config.get(selection, name)
+        except configparser.NoSectionError:
+            return value
         except configparser.NoOptionError:
             return value
     if isPy2():
         import ConfigParser
         try:
             return config.get(selection, name)
+        except ConfigParser.NoSectionError:
+            return value
         except ConfigParser.NoOptionError:
             return value
 
@@ -82,7 +87,7 @@ def findJar():
     accepted_extensions = ["jar", "war"]
     files = [fn for fn in os.listdir(jar_dir) if fn.split(".")[-1] in accepted_extensions]
     if len(files) == 0:
-        print('No any jar or war package files were found.')
+        print('No any jar or war package files were found in ' + jar_dir + '.')
         sys.exit()
     else:
         return files[0]
@@ -96,19 +101,20 @@ def checkArgs(name, argv):
 
 
 def checkCmd():
-    ret = subprocess.call("node -v", shell=True, stdout=None, stderr=None)
+    pipe = subprocess.Popen("node -v", shell=True, stdout=subprocess.PIPE)
+    ret = pipe.wait()
     if ret != 0:
         print('please install nodejs first.')
-        sys.exit()
-    ret = subprocess.call("pm2 -v", shell=True, stdout=None, stderr=None)
+    pipe = subprocess.Popen("node -v", shell=True, stdout=subprocess.PIPE)
+    ret = pipe.wait()
     if ret != 0:
-        print('please install pm2 first. node install -g pm2')
-        sys.exit()
+        print('please install pm2 first. eg: npm install - g pm2')
 
 
 def getName(config, jar):
     # app name
-    return getValue(config, "core", "name", jar)
+    last = jar.rindex("-")
+    return getValue(config, "core", "name", jar[0:last])
 
 
 def initJson(config, jar):
@@ -201,11 +207,20 @@ def _status(name):
 
 
 def _startup():
-    startup_command = "pm2 startup"
-    msg = execute(startup_command, True)[0].decode('utf-8')
-    values = msg.split("\n")
-    command = values[2].replace("sudo", "")
-    execute(command, False)
+    if isLinux():
+        startup_command = "pm2 startup"
+        msg = execute(startup_command, True)[0].decode('utf-8')
+        values = msg.split("\n")
+        command = values[2].replace("sudo", "")
+        execute(command, False)
+
+    if isWindow():
+        startup_command = "pm2-startup install "
+        pipe = subprocess.Popen(startup_command, shell=True, stdout=subprocess.PIPE)
+        ret = pipe.wait()
+        if ret != 0:
+            print('npm install pm2-windows-startup -g')
+            print('pm2-startup install')
 
 
 def _stop(name):
