@@ -23,20 +23,20 @@ function timer() {
 
   exec("pm2 jlist", function (error, stdout, stderr) {
     if (error) {
-      console.log(error);
+      console.log("error = {}", error);
       return;
     }
 
     if (stderr) {
-      console.log(stderr);
+      console.log("stderr = {}", stderr);
       return;
     }
     axios.post(address[0], stdout)
         .then(res => {
-          console.log(res.data)
+          console.log("axios success = {}", res.data)
         })
         .catch(err => {
-          console.log(err);
+          console.log("axios err = {}", err);
         });
   });
 }

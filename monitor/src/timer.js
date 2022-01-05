@@ -8,7 +8,7 @@ function timer() {
     return
   }
 
-  exec("pms jlist", function (error, stdout, stderr) {
+  exec("pm2 jlist", function (error, stdout, stderr) {
     if (error) {
       console.log(error);
       return;
