@@ -2,8 +2,21 @@ const exec = require('child_process').exec;
 const axios = require('axios');
 address = process.argv.splice(2);
 
+
+const utils = {
+
+  isNull: function (v) {
+    return v === null || v === undefined || v === '';
+  },
+
+  isEmpty: function (v) {
+    return this.isNull(v) || v.length === 0;
+  }
+};
+
+
 function timer() {
-  if (address.length <= 0) {
+  if (utils.isEmpty(address)) {
     console.error("please config monitor address.");
     return
   }
