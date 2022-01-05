@@ -253,6 +253,14 @@ def status(config, jar):
     _status(name)
 
 
+def startMonitor(config):
+    address = getValue(config, "monitor", "address", '')
+    error = os.path.join(execute_dir, 'monitor-error.log')
+    info = os.path.join(execute_dir, 'monitor-info.log')
+    command = " pm2 start monitor.js -e " + error + " -o " + info + " -- address " + address
+    execute(command, True)
+
+
 def main(name, argv):
     checkCmd()
     checkArgs(name, argv)
@@ -260,6 +268,7 @@ def main(name, argv):
     jar = findJar()
     # load config
     config = loadConfig()
+    startMonitor(config)
     action = argv[0]
     if action == 'start':
         start(config, jar)

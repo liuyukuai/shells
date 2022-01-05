@@ -4,11 +4,11 @@ address = process.argv.splice(2);
 
 function timer() {
   if (address.length <= 0) {
-    console.error("please config monitor address.");
+    console.error("please config monitor address.")
     return
   }
 
-  exec("pm2 jlist", function (error, stdout, stderr) {
+  exec("pms jlist", function (error, stdout, stderr) {
     if (error) {
       console.log(error);
       return;
@@ -18,9 +18,9 @@ function timer() {
       console.log(stderr);
       return;
     }
-    axios.post(address[0], stdout)
+    axios.post(address[0])
         .then(res => {
-          console.log(res.data)
+          console.log(res)
         })
         .catch(err => {
           console.log(err);
@@ -30,4 +30,3 @@ function timer() {
 
 // 5秒执行一次
 setInterval(timer, 5000);
-
