@@ -107,37 +107,45 @@ def checkArgs(name, argv):
         sys.exit()
 
 
-def installNode():
-    if isLinux():
-        print('try install nodejs .')
-        pipe = subprocess.Popen("yum install nodejs || apt install nodejs", shell=True, stdout=subprocess.PIPE)
-        return pipe.wait()
-    return -1
+def executeCmd(command):
+    pipe = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE)
+    return pipe.wait() == 0
 
 
-def installPm2():
-    if isLinux():
-        print('try install pm2 .')
-        pipe = subprocess.Popen("yum install npm || apt install npm", shell=True, stdout=subprocess.PIPE)
-        pipe.wait()
-        pipe = subprocess.Popen("npm install pm2 -g || npm install pm2 -g", shell=True, stdout=subprocess.PIPE)
-        return pipe.wait()
-    return -1
+def getYumOrApt():
+    if executeCmd("yum -v"):
+        return "yum"
+    if executeCmd("apt -v"):
+        return "apt"
+    return ""
 
 
-def checkCmd():
-    pipe = subprocess.Popen("node -v", shell=True, stdout=subprocess.PIPE)
-    ret = pipe.wait()
-    if ret != 0:
-        ret = installNode()
-        if ret != 0:
+def checkAllCmd():
+    if not executeCmd("node -v"):
+        prefix = getYumOrApt()
+        if prefix:
+            c = prefix + ' install nodejs'
+            print('try ' + c)
+            if not executeCmd(c):
+                print('please install nodejs first.')
+                sys.exit()
             print('please install nodejs first.')
             sys.exit()
-    pipe = subprocess.Popen("pm2 -v", shell=True, stdout=subprocess.PIPE)
-    ret = pipe.wait()
-    if ret != 0:
-        ret = installPm2()
-        if ret != 0:
+    if not executeCmd("npm -v"):
+        prefix = getYumOrApt()
+        if prefix:
+            c = prefix + ' install npm'
+            print('try ' + c)
+            if not executeCmd(c):
+                print('please install npm first. eg: ' + c)
+                sys.exit()
+            print('please install npm first.')
+            sys.exit()
+
+    if not executeCmd("pm2 -v"):
+        c = 'npm install pm2 -g'
+        print('try ' + c)
+        if not executeCmd(c):
             print('please install pm2 first. eg: npm install - g pm2')
             sys.exit()
 
@@ -293,7 +301,7 @@ def startMonitor(config):
 
 
 def main(name, argv):
-    checkCmd()
+    checkAllCmd()
     checkDir()
     checkArgs(name, argv)
     # jar
