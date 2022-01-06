@@ -113,7 +113,7 @@ def executeCmd(command):
 
 
 def getYumOrApt():
-    if executeCmd("yum -v"):
+    if executeCmd("yum --version"):
         return "yum"
     if executeCmd("apt -v"):
         return "apt"
@@ -123,8 +123,11 @@ def getYumOrApt():
 def checkAllCmd():
     if not executeCmd("node -v"):
         prefix = getYumOrApt()
-        if prefix:
+        print(prefix)
+        if prefix is not None:
             c = prefix + ' install nodejs'
+            executeCmd('curl --silent --location https://rpm.nodesource.com/setup_10.x | sudo bash -')
+            executeCmd(prefix + ' clean all')
             print('try ' + c)
             if not executeCmd(c):
                 print('please install nodejs first.')
@@ -133,7 +136,7 @@ def checkAllCmd():
             sys.exit()
     if not executeCmd("npm -v"):
         prefix = getYumOrApt()
-        if prefix:
+        if prefix is not None:
             c = prefix + ' install npm'
             print('try ' + c)
             if not executeCmd(c):
