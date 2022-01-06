@@ -298,7 +298,8 @@ def startMonitor(config):
     address = getValue(config, "monitor", "address", '')
     error = os.path.join(execute_dir, 'monitor-error.log')
     info = os.path.join(execute_dir, 'monitor-info.log')
-    command = " pm2 restart monitor.js -e " + error + " -o " + info + " -- address " + address
+    js = os.path.join(execute_path, 'monitor.js')
+    command = " pm2 restart " + js + " -e " + error + " -o " + info + " -- address " + address
     execute(command, True)
 
 
