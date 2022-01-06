@@ -100,12 +100,28 @@ def checkArgs(name, argv):
         sys.exit()
 
 
+def install():
+    if isLinux():
+        pipe = subprocess.Popen("yum install nodejs || apt install nodejs", shell=True, stdout=subprocess.PIPE)
+        ret = pipe.wait()
+        if ret != 0:
+            print('auto install error. please install nodejs by yourself.')
+            sys.exit()
+        pipe = subprocess.Popen("yum install npm || apt install npm", shell=True, stdout=subprocess.PIPE)
+        pipe.wait()
+        pipe = subprocess.Popen("yum install pm2 -g || apt install pm2 -g", shell=True, stdout=subprocess.PIPE)
+        return pipe.wait()
+    return -1
+
+
 def checkCmd():
     pipe = subprocess.Popen("node -v", shell=True, stdout=subprocess.PIPE)
     ret = pipe.wait()
     if ret != 0:
-        print('please install nodejs first.')
-    pipe = subprocess.Popen("node -v", shell=True, stdout=subprocess.PIPE)
+        ret = install()
+        if ret != 0:
+            print('please install nodejs first.')
+    pipe = subprocess.Popen("pm2 -v", shell=True, stdout=subprocess.PIPE)
     ret = pipe.wait()
     if ret != 0:
         print('please install pm2 first. eg: npm install - g pm2')

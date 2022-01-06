@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="588b0f2f-deb3-4b84-bad8-e2dccdaf289a" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/conf/app.ini" beforeDir="false" afterPath="$PROJECT_DIR$/../conf/app.ini" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../bin/startup.py" beforeDir="false" afterPath="$PROJECT_DIR$/../bin/startup.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -45,8 +44,9 @@
     <auto-save>true</auto-save>
   </component>
   <component name="ProjectFrameBounds" fullScreen="true">
+    <option name="y" value="25" />
     <option name="width" value="1792" />
-    <option name="height" value="1035" />
+    <option name="height" value="1095" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -117,12 +117,12 @@
       <option name="presentableId" value="Default" />
       <updated>1641346942717</updated>
       <workItem from="1641346944371" duration="6769000" />
-      <workItem from="1641377359568" duration="1425000" />
+      <workItem from="1641377359568" duration="1538000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="8194000" />
+    <option name="totallyTimeSpent" value="8307000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1792" height="1120" extended-state="0" />
