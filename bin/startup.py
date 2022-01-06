@@ -108,8 +108,7 @@ def checkArgs(name, argv):
 
 
 def executeCmd(command):
-    pipe = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE)
-    return pipe.wait() == 0
+    return subprocess.call(command, shell=True) == 0
 
 
 def getYumOrApt():
@@ -123,21 +122,21 @@ def getYumOrApt():
 def checkAllCmd():
     if not executeCmd("node -v"):
         prefix = getYumOrApt()
-        print(prefix)
         if prefix is not None:
-            c = prefix + ' install nodejs'
-            executeCmd('curl --silent --location https://rpm.nodesource.com/setup_10.x | sudo bash -')
-            executeCmd(prefix + ' clean all')
-            print('try ' + c)
-            if not executeCmd(c):
-                print('please install nodejs first.')
-                sys.exit()
+            c = prefix + ' install nodejs -y '
+            ret = executeCmd('curl --silent --location https://rpm.nodesource.com/setup_10.x | sudo bash -')
+            if ret:
+                executeCmd(prefix + ' clean all')
+                print('try ' + c)
+                if not executeCmd(c):
+                    print('please install nodejs first.')
+                    sys.exit()
             print('please install nodejs first.')
             sys.exit()
     if not executeCmd("npm -v"):
         prefix = getYumOrApt()
         if prefix is not None:
-            c = prefix + ' install npm'
+            c = prefix + ' install npm -y '
             print('try ' + c)
             if not executeCmd(c):
                 print('please install npm first. eg: ' + c)
