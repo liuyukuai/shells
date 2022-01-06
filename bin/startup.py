@@ -85,7 +85,8 @@ def getValue(config, selection, name, value):
 
 def findJar():
     accepted_extensions = ["jar", "war"]
-    files = [fn for fn in os.listdir(jar_dir) if fn.split(".")[-1] in accepted_extensions]
+    files = [fn for fn in os.listdir(jar_dir) if
+             fn.split(".")[-1] in accepted_extensions and fn.find("sources") == -1 and fn.find("javadoc") == -1]
     if len(files) == 0:
         print('No any jar or war package files were found in ' + jar_dir + '.')
         sys.exit()
@@ -100,13 +101,15 @@ def checkArgs(name, argv):
         sys.exit()
 
 
-def install():
+def installNode():
     if isLinux():
         pipe = subprocess.Popen("yum install nodejs || apt install nodejs", shell=True, stdout=subprocess.PIPE)
-        ret = pipe.wait()
-        if ret != 0:
-            print('auto install error. please install nodejs by yourself.')
-            sys.exit()
+        return pipe.wait()
+    return -1
+
+
+def installPm2():
+    if isLinux():
         pipe = subprocess.Popen("yum install npm || apt install npm", shell=True, stdout=subprocess.PIPE)
         pipe.wait()
         pipe = subprocess.Popen("yum install pm2 -g || apt install pm2 -g", shell=True, stdout=subprocess.PIPE)
@@ -118,13 +121,17 @@ def checkCmd():
     pipe = subprocess.Popen("node -v", shell=True, stdout=subprocess.PIPE)
     ret = pipe.wait()
     if ret != 0:
-        ret = install()
+        ret = installNode()
         if ret != 0:
             print('please install nodejs first.')
+            sys.exit()
     pipe = subprocess.Popen("pm2 -v", shell=True, stdout=subprocess.PIPE)
     ret = pipe.wait()
     if ret != 0:
-        print('please install pm2 first. eg: npm install - g pm2')
+        ret = installPm2()
+        if ret != 0:
+            print('please install pm2 first. eg: npm install - g pm2')
+            sys.exit()
 
 
 def getName(config, jar):
