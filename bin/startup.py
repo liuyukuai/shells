@@ -103,6 +103,7 @@ def checkArgs(name, argv):
 
 def installNode():
     if isLinux():
+        print('try install nodejs .')
         pipe = subprocess.Popen("yum install nodejs || apt install nodejs", shell=True, stdout=subprocess.PIPE)
         return pipe.wait()
     return -1
@@ -110,9 +111,10 @@ def installNode():
 
 def installPm2():
     if isLinux():
+        print('try install pm2 .')
         pipe = subprocess.Popen("yum install npm || apt install npm", shell=True, stdout=subprocess.PIPE)
         pipe.wait()
-        pipe = subprocess.Popen("yum install pm2 -g || apt install pm2 -g", shell=True, stdout=subprocess.PIPE)
+        pipe = subprocess.Popen("npm install pm2 -g || npm install pm2 -g", shell=True, stdout=subprocess.PIPE)
         return pipe.wait()
     return -1
 
