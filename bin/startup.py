@@ -6,8 +6,9 @@ import subprocess
 import sys
 import json
 
-# execute dir
-execute_dir = os.path.dirname(os.getcwd())
+# execute
+execute_path = os.path.dirname(os.path.abspath(sys.argv[0]))
+execute_dir = os.path.dirname(execute_path)
 
 jar_dir = os.path.join(execute_dir, 'libs')
 conf_dir = os.path.join(execute_dir, 'conf')
