@@ -94,6 +94,11 @@ def findJar():
         return files[0]
 
 
+def checkDir():
+    if not exists(conf_dir):
+        mkdirs(conf_dir)
+
+
 def checkArgs(name, argv):
     size = len(argv)
     if size == 0:
@@ -288,6 +293,7 @@ def startMonitor(config):
 
 def main(name, argv):
     checkCmd()
+    checkDir()
     checkArgs(name, argv)
     # jar
     jar = findJar()
