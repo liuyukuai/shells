@@ -232,8 +232,8 @@ def _restart(name):
     out(communicate)
 
 
-def _status(name):
-    status_command = "pm2 status " + name
+def _status():
+    status_command = "pm2 status "
     execute(status_command, False)
 
 
@@ -279,16 +279,15 @@ def restart(config, jar):
     _restart(name)
 
 
-def status(config, jar):
-    name = getName(config, jar)
-    _status(name)
+def status():
+    _status()
 
 
 def startMonitor(config):
     address = getValue(config, "monitor", "address", '')
     error = os.path.join(execute_dir, 'monitor-error.log')
     info = os.path.join(execute_dir, 'monitor-info.log')
-    command = " pm2 start monitor.js -e " + error + " -o " + info + " -- address " + address
+    command = " pm2 restart monitor.js -e " + error + " -o " + info + " -- address " + address
     execute(command, True)
 
 
@@ -300,16 +299,17 @@ def main(name, argv):
     jar = findJar()
     # load config
     config = loadConfig()
-    startMonitor(config)
     action = argv[0]
     if action == 'start':
         start(config, jar)
+        startMonitor(config)
     elif action == 'restart':
         restart(config, jar)
+        startMonitor(config)
     elif action == 'stop':
         stop(config, jar)
     elif action == 'status':
-        status(config, jar)
+        status()
     else:
         print("Usage: " + name + " {start|stop|status|restart}")
         sys.exit()
