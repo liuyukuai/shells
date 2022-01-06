@@ -241,9 +241,10 @@ def _startup():
     if isLinux():
         startup_command = "pm2 startup"
         msg = execute(startup_command, True)[0].decode('utf-8')
-        values = msg.split("\n")
-        command = values[2].replace("sudo", "")
-        execute(command, False)
+        if msg.find("sudo") != -1:
+            values = msg.split("\n")
+            command = values[2].replace("sudo", "")
+            execute(command, False)
 
     if isWindow():
         startup_command = "pm2-startup install "
