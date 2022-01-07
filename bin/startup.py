@@ -124,6 +124,18 @@ def getYumOrApt():
     return ""
 
 
+def checkCmd():
+    if not executeCmd("node -v"):
+        print('please install nodejs first. eg: yum install nodejs')
+        sys.exit()
+    if not executeCmd("npm -v"):
+        print('please install npm first. eg: yum install npm')
+        sys.exit()
+    if not executeCmd("pm2 -v"):
+        print('please install pm2 first. eg: npm install - g pm2')
+        sys.exit()
+
+
 def checkAllCmd():
     if not executeCmd("node -v"):
         prefix = getYumOrApt()
@@ -276,6 +288,12 @@ def _stop(name):
     out(communicate)
 
 
+def _isRunning(name):
+    running_command = "pm2 pid " + name
+    communicate = execute(running_command, True)
+    return communicate is not None
+
+
 def start(config, jar):
     name = getName(config, jar)
     _delete(name)
@@ -300,16 +318,17 @@ def status():
 
 
 def startMonitor(config):
-    address = getValue(config, "monitor", "address", '')
-    error = os.path.join(execute_dir, 'monitor-error.log')
-    info = os.path.join(execute_dir, 'monitor-info.log')
-    js = os.path.join(execute_path, 'monitor.js')
-    command = " pm2 start " + js + " -e " + error + " -o " + info + " -- address " + address
-    execute(command, True)
+    if not _isRunning("monitor"):
+        address = getValue(config, "monitor", "address", '')
+        error = os.path.join(execute_dir, 'monitor-error.log')
+        info = os.path.join(execute_dir, 'monitor-info.log')
+        js = os.path.join(execute_path, 'monitor.js')
+        command = " pm2 start " + js + " -e " + error + " -o " + info + " -- address " + address
+        execute(command, True)
 
 
 def main(name, argv):
-    checkAllCmd()
+    checkCmd()
     checkDir()
     checkArgs(name, argv)
     # jar
@@ -327,8 +346,10 @@ def main(name, argv):
         stop(config, jar)
     elif action == 'status':
         status()
+    elif action == 'install':
+        checkAllCmd()
     else:
-        print("Usage: " + name + " {start|stop|status|restart}")
+        print("Usage: " + name + " {start|stop|status|restart|install}")
         sys.exit()
 
 
