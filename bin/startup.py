@@ -292,7 +292,7 @@ def _isRunning(name):
     running_command = "pm2 pid " + name
     communicate = execute(running_command, True)[0].decode('utf-8')
     print('monitor pid is ' + communicate)
-    return communicate is not None and communicate != 0
+    return len(communicate.lstrip()) != 0 and communicate != 0
 
 
 def start(config, jar):
