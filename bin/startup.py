@@ -12,6 +12,7 @@ execute_dir = os.path.dirname(execute_path)
 
 jar_dir = os.path.join(execute_dir, 'libs')
 conf_dir = os.path.join(execute_dir, 'conf')
+default_file = os.path.join(conf_dir, 'default.ini')
 conf_file = os.path.join(conf_dir, 'app.ini')
 
 
@@ -51,15 +52,19 @@ def execute(command, std):
 
 
 def loadConfig():
+    s_file = default_file
+    if exists(conf_file):
+        s_file = conf_file
+
     if isPy3():
         import configparser
         config = configparser.ConfigParser()
-        config.read(conf_file)
+        config.read(s_file)
         return config
     else:
         import ConfigParser
         config = ConfigParser.ConfigParser()
-        config.read(conf_file)
+        config.read(s_file)
         return config
 
 
