@@ -136,6 +136,11 @@ def checkCmd():
         sys.exit()
 
 
+def initConfig():
+    if not executeCmd("pm2 set pm2:autodump true"):
+        print('execute pm2 set pm2:autodump true failed. ')
+
+
 def checkAllCmd():
     if not executeCmd("node -v"):
         prefix = getYumOrApt()
@@ -332,6 +337,8 @@ def main(name, argv):
     checkCmd()
     checkDir()
     checkArgs(name, argv)
+    # init config
+    initConfig()
     # jar
     jar = findJar()
     # load config
