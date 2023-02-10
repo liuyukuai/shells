@@ -146,7 +146,7 @@ def checkAllCmd():
         prefix = getYumOrApt()
         if prefix is not None:
             c = prefix + ' install nodejs -y '
-            ret = executeCmd('curl --silent --location https://rpm.nodesource.com/setup_10.x | sudo bash -')
+            ret = executeCmd('curl --silent --location https://rpm.nodesource.com/setup_16.x | sudo bash -')
             if ret:
                 executeCmd(prefix + ' clean all')
                 print('try ' + c)
@@ -323,16 +323,6 @@ def status():
     _status()
 
 
-def startMonitor(config):
-    if not _isRunning("monitor"):
-        address = getValue(config, "monitor", "address", '')
-        error = os.path.join(execute_dir, 'monitor-error.log')
-        info = os.path.join(execute_dir, 'monitor-info.log')
-        js = os.path.join(execute_path, 'monitor.js')
-        command = " pm2 start " + js + " -e " + error + " -o " + info + " -- address " + address
-        execute(command, True)
-
-
 def main(name, argv):
     checkCmd()
     checkDir()
@@ -346,10 +336,8 @@ def main(name, argv):
     action = argv[0]
     if action == 'start':
         start(config, jar)
-        startMonitor(config)
     elif action == 'restart':
         restart(config, jar)
-        startMonitor(config)
     elif action == 'stop':
         stop(config, jar)
     elif action == 'status':
