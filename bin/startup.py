@@ -212,16 +212,22 @@ def initJson(config, jar):
         for opt in options:
             dict_json["args"].append(opt)
 
-    # meta
-    meta = getValue(config, "apollo", "meta", '')
+    # commons.config.type
+    type = getValue(config, "config", "type", '')
+    if len(type) != 0:
+        type = '-Dcommons.config.type=' + type
+        dict_json["args"].append(type)
+
+     # commons.config.meta
+    meta = getValue(config, "config", "meta", '')
     if len(meta) != 0:
-        meta = '-Dapollo.meta=' + meta
+        meta = '-Dcommons.config.meta=' + meta
         dict_json["args"].append(meta)
 
     # namespace
-    namespaces = getValue(config, "apollo", "bootstrap.namespaces", '')
+    namespaces = getValue(config, "config", "namespaces", '')
     if len(namespaces) != 0:
-        namespaces = '-Dapollo.bootstrap.namespaces=' + namespaces
+        namespaces = '-Dcommons.config.namespaces=' + namespaces
         dict_json["args"].append(namespaces)
 
     dict_json["args"].append(r_env)
