@@ -193,6 +193,13 @@ def initJson(config, jar):
     max_restart = getValue(config, "core", "max_restart", '5')
     # min_uptime
     min_uptime = getValue(config, "core", "min_uptime", '60s')
+    # disable_log
+    disable_log = getValue(config, "core", "disable_log", 'true')
+    # out_file
+    out_file = os.path.join(execute_dir, 'info.log')
+
+    if disable_log:
+        out_file = "/dev/null"
 
     dict_json = {
         "name": name,
@@ -204,7 +211,7 @@ def initJson(config, jar):
         "min_uptime": min_uptime,
         "exec_mode": "fork",
         "error_file": os.path.join(execute_dir, 'error.log'),
-        "out_file": os.path.join(execute_dir, 'info.log')
+        "out_file": out_file
     }
 
     if len(jvm_options) != 0:
@@ -218,7 +225,7 @@ def initJson(config, jar):
         type = '-Dcommons.config.type=' + type
         dict_json["args"].append(type)
 
-     # commons.config.meta
+    # commons.config.meta
     meta = getValue(config, "config", "meta", '')
     if len(meta) != 0:
         meta = '-Dcommons.config.meta=' + meta
