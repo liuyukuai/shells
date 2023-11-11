@@ -194,7 +194,7 @@ def initJson(config, jar):
     # min_uptime
     min_uptime = getValue(config, "core", "min_uptime", '60s')
     # disable_log
-    disable_log = getValue(config, "core", "disable_log", 'true')
+    disable_log = getValue(config, "core", "disable_log", True)
     # out_file
     out_file = os.path.join(execute_dir, 'info.log')
 
